@@ -3,7 +3,11 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>TeddAplicator2 – Dark Mode</title>
+  <title>TeddAplicator2 – Dashboard</title>
+
+  <!-- Tambah font Orbitron dari Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+
   <style>
     html, body {
       margin: 0;
@@ -18,18 +22,39 @@
       background: #1f1f1f;
       padding: 20px;
       text-align: center;
+      border-bottom: 1px solid #333;
     }
 
     h1 {
       margin: 0;
       color: #00ffcc;
+      font-family: 'Orbitron', sans-serif;
+      letter-spacing: 2px;
+    }
+
+    nav {
+      display: flex;
+      justify-content: center;
+      background-color: #1a1a1a;
+      border-bottom: 1px solid #333;
+    }
+
+    nav a {
+      color: #eee;
+      text-decoration: none;
+      padding: 15px 20px;
+      display: block;
+    }
+
+    nav a:hover {
+      background-color: #00ffcc;
+      color: #000;
     }
 
     #chart-container {
       position: relative;
       width: 100%;
       height: 85vh;
-      margin: 0 auto;
     }
 
     @media (max-width: 768px) {
@@ -40,10 +65,17 @@
   </style>
 </head>
 <body>
+
   <header>
-    <h1>📈 TEDD APLICATORS </h1>
-    <p>Chart XAUUSD Live –BISMILLAH</p>
+    <h1>📈 TEDD APLICATORS</h1>
+    <p>Platform monitoring entry forex & crypto – Live Chart</p>
   </header>
+
+  <nav>
+    <a href="index.html">Chart</a>
+    <a href="alarm.html">Alarm Entry</a>
+    <a href="status.html">Status Akun</a>
+  </nav>
 
   <div id="chart-container">
     <!-- TradingView Widget BEGIN -->
@@ -74,5 +106,6 @@
     </div>
     <!-- TradingView Widget END -->
   </div>
+
 </body>
 </html>
