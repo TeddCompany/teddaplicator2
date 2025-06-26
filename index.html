@@ -3,26 +3,36 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>TeddAplicator2 – Dashboard</title>
+  <title>TEDD APLICATORS – Dashboard</title>
 
-  <!-- Tambah font Orbitron dari Google Fonts -->
+  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
 
   <style>
     html, body {
       margin: 0;
       padding: 0;
-      background-color: #121212;
-      color: #eee;
-      font-family: Arial, sans-serif;
       height: 100%;
+      font-family: Arial, sans-serif;
+      color: #eee;
+      background: url('https://images.unsplash.com/photo-1623053432940-6be5c9961c59?auto=format&fit=crop&w=1600&q=80') no-repeat center center fixed;
+      background-size: cover;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(4px);
+      z-index: -1;
     }
 
     header {
-      background: #1f1f1f;
+      background: rgba(0, 0, 0, 0.6);
       padding: 20px;
       text-align: center;
-      border-bottom: 1px solid #333;
+      border-bottom: 1px solid #444;
     }
 
     h1 {
@@ -35,8 +45,8 @@
     nav {
       display: flex;
       justify-content: center;
-      background-color: #1a1a1a;
-      border-bottom: 1px solid #333;
+      background: rgba(0, 0, 0, 0.5);
+      border-bottom: 1px solid #444;
     }
 
     nav a {
@@ -44,6 +54,7 @@
       text-decoration: none;
       padding: 15px 20px;
       display: block;
+      transition: 0.3s;
     }
 
     nav a:hover {
@@ -55,6 +66,7 @@
       position: relative;
       width: 100%;
       height: 85vh;
+      margin-top: 10px;
     }
 
     @media (max-width: 768px) {
