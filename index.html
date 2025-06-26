@@ -1,16 +1,23 @@
+<!-- LANGSUNG DARI AWAL 
+bismillah dulu baru entry🤲🏻-->
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>TEDD APLICATORS - Alarm Entry Forex</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TeddAplicator2 - Alarm Entry Forex</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <style>
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
-      margin: 0;
       font-family: 'Poppins', sans-serif;
       background-color: #0f1a17;
       color: #e0ffe6;
+      margin: 0;
+      padding: 0;
     }
 
     header {
@@ -19,51 +26,91 @@
       padding: 20px;
       text-align: center;
       font-family: 'Orbitron', sans-serif;
-      font-size: 1.8em;
-      font-weight: bold;
-      letter-spacing: 1px;
+      font-size: 2em;
     }
 
-    section {
-      padding: 30px 20px;
-      max-width: 900px;
-      margin: auto;
+    .section {
+      max-width: 1000px;
+      margin: 20px auto;
+      padding: 20px;
+    }
+
+    .intro {
+      background-color: #162821;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 30px;
+      box-shadow: 0 0 10px #00ff9955;
+    }
+
+    .intro h2 {
+      color: #00ff99;
+    }
+
+    .btn-demo,
+    .btn-alarm {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #00c853;
+      color: #0f1a17;
+      font-weight: bold;
+      text-decoration: none;
+      border-radius: 6px;
+      margin-top: 10px;
+      margin-right: 10px;
+    }
+
+    .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .chart-section {
+      height: 70vh;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 40px;
+    }
+
+    .alarm-section {
+      background-color: #1b2b28;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #00ff9955;
+      margin-bottom: 50px;
     }
 
     h2 {
-      color: #00ff9c;
-      font-size: 1.5em;
+      color: #00ff99;
     }
 
-    p {
+    input[type="number"] {
+      padding: 10px;
+      width: 100%;
       font-size: 1em;
-      line-height: 1.6;
+      margin-top: 10px;
+      border: none;
+      border-radius: 6px;
+      margin-bottom: 10px;
     }
 
-    .btn-demo {
-      display: inline-block;
-      margin-top: 20px;
-      padding: 12px 24px;
+    button {
+      padding: 10px 20px;
       background-color: #00c853;
       color: #0f1a17;
       font-weight: bold;
       border: none;
-      border-radius: 8px;
-      text-decoration: none;
-      transition: background 0.3s;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-right: 10px;
     }
 
-    .btn-demo:hover {
-      background-color: #1de9b6;
-    }
-
-    .chart-container {
-      margin-top: 40px;
-      background-color: #1b2b28;
-      border-radius: 10px;
-      padding: 20px;
-      text-align: center;
-      border: 1px solid #00ff9c33;
+    .status {
+      margin-top: 10px;
+      font-size: 1em;
+      color: #66ffaa;
     }
 
     .footer {
@@ -73,56 +120,115 @@
       background-color: #06130f;
       color: #44ffaa88;
     }
-
-    @media (max-width: 600px) {
-      header {
-        font-size: 1.4em;
-      }
-    }
   </style>
 </head>
 <body>
 
-<header>TeddAplicator2 - Alarm Entry Forex</header>
+  <header>TeddAplicator2 - Alarm Entry Forex</header>
 
-<section>
-  <h2>Deteksi Peluang Entry Otomatis</h2>
-  <p>
-    Sistem alarm pintar untuk mendeteksi peluang entry profit berdasarkan RSI, Support Resistance, dan pola pergerakan. Didukung auto-switch ke BTC saat akhir pekan!
-  </p>
+  <div class="section">
+    <!-- Intro Section -->
+    <div class="intro">
+      <h2>Selamat datang di TeddAplicator2</h2>
+      <p>Platform pemantauan entry forex berbasis alarm harga dan analisa real-time. Pantau pergerakan XAUUSD langsung di chart, dan aktifkan alarm saat harga menyentuh titik penting pilihanmu.</p>
+      <a href="#" class="btn-demo">Coba Demo Sekarang</a>
+    </div>
 
-  <div class="chart-container" style="height: 70vh; width: 100%;">
-  <h3>Chart Real-Time Interaktif</h3>
-  <!-- TradingView Advanced Chart Widget BEGIN -->
-  <div class="tradingview-widget-container" style="height:100%; width:100%">
-    <div id="tradingview_advanced" style="height:100%; width:100%"></div>
-    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
-    <script type="text/javascript">
-      new TradingView.widget({
-        "container_id": "tradingview_advanced",
-        "autosize": true,
-        "symbol": "OANDA:XAUUSD",
-        "interval": "15",
-        "timezone": "Asia/Jakarta",
-        "theme": "dark",
-        "style": "1",
-        "locale": "id",
-        "toolbar_bg": "#0f1a17",
-        "enable_publishing": false,
-        "withdateranges": true,
-        "hide_side_toolbar": false,
-        "allow_symbol_change": true,
-        "save_image": false,
-        "studies": [],
-        "details": true
-      });
-    </script>
+    <!-- Chart Header with Alarm Button -->
+    <div class="chart-header">
+      <h2>Chart Live XAUUSD</h2>
+      <a href="#alarmSection" class="btn-alarm">Set Alarm</a>
+    </div>
+
+    <!-- Chart Section -->
+    <div class="chart-section">
+      <div class="tradingview-widget-container" style="height:100%; width:100%">
+        <div id="tradingview_advanced" style="height:100%; width:100%"></div>
+        <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+        <script type="text/javascript">
+          new TradingView.widget({
+            "container_id": "tradingview_advanced",
+            "autosize": true,
+            "symbol": "OANDA:XAUUSD",
+            "interval": "15",
+            "timezone": "Asia/Jakarta",
+            "theme": "dark",
+            "style": "1",
+            "locale": "id",
+            "toolbar_bg": "#0f1a17",
+            "enable_publishing": false,
+            "withdateranges": true,
+            "hide_side_toolbar": false,
+            "allow_symbol_change": true,
+            "save_image": false,
+            "studies": [],
+            "details": true
+          });
+        </script>
+      </div>
+    </div>
+
+    <!-- Alarm Section -->
+    <div id="alarmSection" class="alarm-section">
+      <h2>Set Alarm Harga Manual (XAUUSD)</h2>
+      <label for="targetPrice">Masukkan harga target:</label>
+      <input type="number" id="targetPrice" step="0.01" placeholder="Contoh: 2375.50">
+      <button onclick="setAlarm()">Set Alarm</button>
+      <button onclick="resetAlarm()">Reset</button>
+      <div class="status" id="statusText">Belum ada alarm yang diatur.</div>
+    </div>
   </div>
- 
-  <!-- TradingView Advanced Chart Widget END -->
-</div</div>
-  © 2025 TeddAplicator2 - Powered by Mas Teddy × Treasure
-</div>
+
+  <!-- Alarm Sound -->
+  <audio id="alarmSound" src="https://notificationsounds.com/storage/sounds/file-sounds-1155-pristine.mp3" preload="auto"></audio>
+
+  <!-- Script Alarm -->
+  <script>
+    let alarmPrice = null;
+    let alarmTriggered = false;
+
+    function setAlarm() {
+      const input = document.getElementById("targetPrice");
+      alarmPrice = parseFloat(input.value);
+      alarmTriggered = false;
+      document.getElementById("statusText").innerText = `Alarm disetel di ${alarmPrice.toFixed(2)} - menunggu harga menyentuh...`;
+    }
+
+    function resetAlarm() {
+      alarmPrice = null;
+      alarmTriggered = false;
+      document.getElementById("statusText").innerText = "Alarm telah di-reset.";
+    }
+
+    async function getCurrentPrice() {
+      try {
+        const response = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=tether-gold&vs_currencies=usd");
+        const data = await response.json();
+        return data["tether-gold"].usd;
+      } catch (error) {
+        console.error("Gagal ambil harga:", error);
+        return null;
+      }
+    }
+
+    async function monitorPrice() {
+      if (!alarmPrice || alarmTriggered) return;
+      const currentPrice = await getCurrentPrice();
+      if (currentPrice && currentPrice >= alarmPrice) {
+        document.getElementById("statusText").innerText = `🎯 Harga sekarang ${currentPrice} sudah mencapai target ${alarmPrice}!`;
+        document.getElementById("alarmSound").play();
+        alarmTriggered = true;
+      } else if (currentPrice) {
+        document.getElementById("statusText").innerText = `⏳ Harga sekarang: ${currentPrice} | Menunggu: ${alarmPrice}`;
+      }
+    }
+
+    setInterval(monitorPrice, 6000);
+  </script>
+
+  <div class="footer">
+    © 2025 TeddAplicator2 · Dibuat oleh Mas Teddy & Treasure
+  </div>
 
 </body>
 </html>
