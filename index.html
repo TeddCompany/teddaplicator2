@@ -1,123 +1,107 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>TeddAplicator2 – Dashboard</title>
-
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TEDD APLICATORS - Alarm Entry Forex</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    html, body {
+    body {
       margin: 0;
-      padding: 0;
-      height: 100%;
-      font-family: Arial, sans-serif;
-      color: #eee;
-      background: url('https://images.unsplash.com/photo-1623053432940-6be5c9961c59?auto=format&fit=crop&w=1600&q=80') no-repeat center center fixed;
-      background-size: cover;
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0, 0, 0, 0.7);
-      backdrop-filter: blur(4px);
-      z-index: -1;
+      font-family: 'Poppins', sans-serif;
+      background-color: #0f1a17;
+      color: #e0ffe6;
     }
 
     header {
-      background: rgba(0, 0, 0, 0.6);
+      background: linear-gradient(90deg, #1de9b6, #00c853);
+      color: #0f1a17;
       padding: 20px;
       text-align: center;
-      border-bottom: 1px solid #444;
-    }
-
-    h1 {
-      margin: 0;
-      color: #00ffcc;
       font-family: 'Orbitron', sans-serif;
-      letter-spacing: 2px;
+      font-size: 1.8em;
+      font-weight: bold;
+      letter-spacing: 1px;
     }
 
-    nav {
-      display: flex;
-      justify-content: center;
-      background: rgba(0, 0, 0, 0.5);
-      border-bottom: 1px solid #444;
+    section {
+      padding: 30px 20px;
+      max-width: 900px;
+      margin: auto;
     }
 
-    nav a {
-      color: #eee;
+    h2 {
+      color: #00ff9c;
+      font-size: 1.5em;
+    }
+
+    p {
+      font-size: 1em;
+      line-height: 1.6;
+    }
+
+    .btn-demo {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 12px 24px;
+      background-color: #00c853;
+      color: #0f1a17;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
       text-decoration: none;
-      padding: 15px 20px;
-      display: block;
-      transition: 0.3s;
+      transition: background 0.3s;
     }
 
-    nav a:hover {
-      background-color: #00ffcc;
-      color: #000;
+    .btn-demo:hover {
+      background-color: #1de9b6;
     }
 
-    #chart-container {
-      position: relative;
-      width: 100%;
-      height: 85vh;
-      margin-top: 10px;
+    .chart-container {
+      margin-top: 40px;
+      background-color: #1b2b28;
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+      border: 1px solid #00ff9c33;
     }
 
-    @media (max-width: 768px) {
-      #chart-container {
-        height: 80vh;
+    .footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 0.9em;
+      background-color: #06130f;
+      color: #44ffaa88;
+    }
+
+    @media (max-width: 600px) {
+      header {
+        font-size: 1.4em;
       }
     }
   </style>
 </head>
 <body>
 
-  <header>
-    <h1>📈 TEDD APLICATORS</h1>
-    <p>Platform monitoring entry forex & crypto – Live Chart</p>
-  </header>
+<header>TeddAplicator2 - Alarm Entry Forex</header>
 
-  <nav>
-    <a href="index.html">Chart</a>
-    <a href="alarm.html">Alarm Entry</a>
-    <a href="status.html">Status Akun</a>
-  </nav>
+<section>
+  <h2>Deteksi Peluang Entry Otomatis</h2>
+  <p>
+    Sistem alarm pintar untuk mendeteksi peluang entry profit berdasarkan RSI, Support Resistance, dan pola pergerakan. Didukung auto-switch ke BTC saat akhir pekan!
+  </p>
+  <a href="#" class="btn-demo">Lihat Demo</a>
 
-  <div id="chart-container">
-    <!-- TradingView Widget BEGIN -->
-    <div class="tradingview-widget-container" style="height: 100%; width: 100%;">
-      <div id="tradingview_12345" style="height: 100%; width: 100%;"></div>
-      <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
-      <script type="text/javascript">
-        new TradingView.widget({
-          "container_id": "tradingview_12345",
-          "autosize": true,
-          "symbol": "FX:XAUUSD",
-          "interval": "15",
-          "timezone": "Asia/Jakarta",
-          "theme": "dark",
-          "style": "1",
-          "toolbar_bg": "#2b2b2b",
-          "withdateranges": true,
-          "allow_symbol_change": true,
-          "hide_side_toolbar": false,
-          "enable_publishing": false,
-          "locale": "id",
-          "studies": [],
-          "show_popup_button": true,
-          "popup_width": "1000",
-          "popup_height": "650"
-        });
-      </script>
-    </div>
-    <!-- TradingView Widget END -->
+  <div class="chart-container">
+    <h3>Chart Real-Time (Coming Soon)</h3>
+    <img src="https://www.tradingview.com/x/N6gFmhcl/" alt="Chart Forex" width="100%" style="max-width:600px; border-radius:6px; opacity:0.3;">
+    <p style="color:#77ffccaa;">Integrasi TradingView akan segera hadir.</p>
   </div>
+</section>
+
+<div class="footer">
+  © 2025 TeddAplicator2 - Powered by Mas Teddy × Treasure
+</div>
 
 </body>
 </html>
