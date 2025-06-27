@@ -1,18 +1,50 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>TeddAplicator2 – Robot Test</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TeddAplicator2 Robot Test</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron&family=Poppins&display=swap" rel="stylesheet">
+  <script src="https://s3.tradingview.com/tv.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/technicalindicators/3.0.0/technicalindicators.min.js"></script>
   <style>
-    body { font-family:Poppins,sans-serif; background:#0f1a17; color:#e0ffe6; margin:0; padding:20px; }
-    h1 { font-family:Orbitron,sans-serif; }
-    .controls { margin-bottom:20px; }
-    select, input, button { padding:8px; margin-right:10px; border-radius:5px; font-size:1em; }
-    #log { background:#162821; padding:10px; height:200px; overflow:auto; margin-top:20px; border-radius:5px; }
-    .section { margin-top:20px; }
+    body {
+      background-color: #0f1a17;
+      color: #e0ffe6;
+      font-family: 'Poppins', sans-serif;
+      padding: 20px;
+    }
+    h1 {
+      font-family: 'Orbitron', sans-serif;
+      text-align: center;
+    }
+    .controls {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    select, input, button {
+      padding: 10px;
+      margin: 5px;
+      font-size: 1em;
+    }
+    #chart-container {
+      height: 400px;
+      margin-bottom: 20px;
+    }
+    #log {
+      background: #162821;
+      padding: 15px;
+      border-radius: 8px;
+      white-space: pre-wrap;
+      font-family: monospace;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    #status {
+      text-align: center;
+      font-size: 1.1em;
+      margin-bottom: 10px;
+    }
   </style>
 </head>
 <body>
@@ -20,97 +52,120 @@
   <div class="controls">
     <label>Pair:</label>
     <select id="pair">
-      <option value="XAUUSD">XAUUSD</option>
-      <option value="BTCUSD">BTCUSD</option>
+      <option value="XAU/USD">XAUUSD</option>
+      <option value="BTC/USD">BTCUSD</option>
     </select>
     <label>RSI Period:</label>
-    <input type="number" id="rsiPeriod" value="14" style="width:60px" />
+    <input type="number" id="rsiPeriod" value="14" />
     <button onclick="startTest()">Mulai Test Robot</button>
     <button onclick="stopTest()">Stop</button>
   </div>
 
-  <!-- Chart Realtime -->
-  <div class="section">
-    <div id="chart-container" style="height:400px;"></div>
-  </div>
-
-  <!-- Log Output -->
+  <div id="chart-container"></div>
+  <div id="status">🟡 Menunggu perintah...</div>
   <div id="log"></div>
 
-  <script src="https://s3.tradingview.com/tv.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/technicalindicators/3.0.0/technicalindicators.min.js"></script>
   <script>
-    let tvWidget = null;
-    function loadChart(pair) {
-      if (tvWidget) tvWidget.remove();
-      tvWidget = new TradingView.widget({
-        "width": "100%", "height": 400,
-        "symbol": "OANDA:" + pair,
-        "interval": "1", "timezone": "Asia/Jakarta",
-        "theme": "dark", "style": "1", "locale": "id",
-        "toolbar_bg": "#f1f3f6", "enable_publishing": false,
-        "allow_symbol_change": false, "container_id": "chart-container"
-      });
-    }
-
+    let interval = null;
     const logEl = document.getElementById('log');
-    let testInterval = null;
+    const statusEl = document.getElementById('status');
 
     function log(msg) {
       const now = new Date().toLocaleTimeString();
-      logEl.innerHTML = `[${now}] ${msg}<br>` + logEl.innerHTML;
+      logEl.innerText = `[${now}] ${msg}\n` + logEl.innerText;
     }
 
-    async function getPrices(pair) {
-      try {
-        const sym = pair === 'XAUUSD' ? 'XAU/USD' : 'BTC/USD';
-        const res = await fetch(`https://api.twelvedata.com/time_series?symbol=${sym}&interval=1min&apikey=71b4e9263e6443f18d394bdfaf453c21&outputsize=100`);
-        const data = await res.json();
-        return data.values.map(v => parseFloat(v.close)).reverse();
-      } catch (e) {
-        log('⚠️ Gagal ambil data ' + pair);
-        return [];
+    function updateStatus(text, emoji = "🔄") {
+      statusEl.innerHTML = `${emoji} ${text}`;
+    }
+
+    function startTest() {
+      const pair = document.getElementById("pair").value.replace("/", "");
+      const period = parseInt(document.getElementById("rsiPeriod").value);
+      if (!period || period <= 1) {
+        alert("RSI period harus lebih dari 1.");
+        return;
       }
-    }
 
-    async function startTest() {
-      const period = parseInt(document.getElementById('rsiPeriod').value);
-      const pair = document.getElementById('pair').value;
+      updateStatus(`Memulai test robot untuk ${pair} (RSI ${period})...`);
+      log(`Memulai uji RSI untuk ${pair}`);
+
       loadChart(pair);
-      if (testInterval) clearInterval(testInterval);
-      log(`⚙️ Mulai uji ${pair} (RSI ${period})...`);
-
-      testInterval = setInterval(async () => {
-        const prices = await getPrices(pair);
-        if (prices.length < period) {
-          log('❌ Data kurang untuk hitung RSI.');
-          return;
-        }
-        const rsi = technicalindicators.RSI.calculate({ values: prices, period }).slice(-1)[0];
-        const price = prices[prices.length -1];
-        log(`Harga: ${price}, RSI: ${rsi.toFixed(2)}`);
-        if (rsi < 30) log('✅ SIGNAL BUY');
-        if (rsi > 70) log('⚠️ SIGNAL SELL');
-      }, 60000);
-
-      // jalankan satu kali segera
-      clearInterval(testInterval);
-      testInterval = setTimeout(startTest, 0);
+      clearInterval(interval);
+      interval = setInterval(() => fetchAndAnalyze(pair, period), 10000);
     }
 
     function stopTest() {
-      clearInterval(testInterval);
-      testInterval = null;
-      log('⏹️ Test dihentikan');
+      clearInterval(interval);
+      updateStatus("Robot dihentikan", "⏹️");
+      log("Robot dihentikan.");
     }
 
-    // reload chart saat pair berubah
-    document.getElementById('pair').addEventListener('change', () => {
-      loadChart(document.getElementById('pair').value);
-    });
+    function fetchAndAnalyze(pair, rsiPeriod) {
+      updateStatus("Mengambil data harga...");
+      const apiKey = "71b4e9263e6443f18d394bdfaf453c21";
+      const url = `https://api.twelvedata.com/time_series?symbol=${pair}&interval=1min&outputsize=100&apikey=${apiKey}`;
 
-    // inisialisasi chart XAUUSD
-    loadChart('XAUUSD');
+      fetch(url)
+        .then(res => res.json())
+        .then(data => {
+          if (!data.values || data.status === "error") {
+            log(`⚠️ Gagal ambil data: ${data.message || "Unknown error"}`);
+            return;
+          }
+
+          const closePrices = data.values.map(d => parseFloat(d.close)).reverse();
+          if (closePrices.length < rsiPeriod) {
+            log("❌ Data kurang untuk hitung RSI.");
+            return;
+          }
+
+          const rsi = window.RSI.calculate({ values: closePrices, period: rsiPeriod });
+          const lastRSI = rsi[rsi.length - 1];
+          log(`✅ RSI terbaru: ${lastRSI.toFixed(2)}`);
+
+          if (lastRSI < 30) {
+            updateStatus("Sinyal BUY terdeteksi!", "🟢");
+            log("🟢 RSI di bawah 30 (oversold) → Potensi BUY");
+            showEntryButton("BUY");
+          } else if (lastRSI > 70) {
+            updateStatus("Sinyal SELL terdeteksi!", "🔴");
+            log("🔴 RSI di atas 70 (overbought) → Potensi SELL");
+            showEntryButton("SELL");
+          } else {
+            updateStatus("RSI normal. Tidak ada sinyal entry.", "⚪");
+          }
+        });
+    }
+
+    function showEntryButton(type) {
+      const btn = document.createElement("button");
+      btn.innerText = `🔔 Execute Entry ${type}`;
+      btn.style.marginTop = "10px";
+      btn.onclick = () => {
+        log(`✅ Entry ${type} disimulasikan.`);
+        btn.remove();
+      };
+      document.getElementById("status").appendChild(btn);
+    }
+
+    function loadChart(pair) {
+      const symbol = pair === "XAUUSD" ? "OANDA:XAUUSD" : "BINANCE:BTCUSDT";
+      document.getElementById("chart-container").innerHTML = "";
+      new TradingView.widget({
+        "container_id": "chart-container",
+        "symbol": symbol,
+        "interval": "1",
+        "timezone": "Asia/Jakarta",
+        "theme": "dark",
+        "style": "1",
+        "locale": "id",
+        "toolbar_bg": "#f1f3f6",
+        "enable_publishing": false,
+        "allow_symbol_change": false,
+        "autosize": true
+      });
+    }
   </script>
 </body>
 </html>
