@@ -1,5 +1,6 @@
 <!-- LANGSUNG DARI AWAL 
 bismillah dulu baru entry🤲🏻-->
+<!-- LANGSUNG DARI AWAL -->
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -11,7 +12,6 @@ bismillah dulu baru entry🤲🏻-->
     html {
       scroll-behavior: smooth;
     }
-
     body {
       font-family: 'Poppins', sans-serif;
       background-color: #0f1a17;
@@ -19,7 +19,6 @@ bismillah dulu baru entry🤲🏻-->
       margin: 0;
       padding: 0;
     }
-
     header {
       background: linear-gradient(90deg, #1de9b6, #00c853);
       color: #0f1a17;
@@ -28,208 +27,76 @@ bismillah dulu baru entry🤲🏻-->
       font-family: 'Orbitron', sans-serif;
       font-size: 2em;
     }
-
     .section {
       max-width: 1000px;
       margin: 20px auto;
       padding: 20px;
     }
-
     .intro {
       background-color: #162821;
       padding: 20px;
       border-radius: 10px;
-      margin-bottom: 30px;
-      box-shadow: 0 0 10px #00ff9955;
+      margin-bottom: 20px;
     }
-
-    .intro h2 {
-      color: #00ff99;
-    }
-
-    .btn-demo,
-    .btn-alarm {
-      display: inline-block;
-      padding: 10px 20px;
-      background-color: #00c853;
-      color: #0f1a17;
-      font-weight: bold;
-      text-decoration: none;
-      border-radius: 6px;
-      margin-top: 10px;
-      margin-right: 10px;
-    }
-
-    .chart-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-
-    .chart-section {
-      height: 70vh;
-      border-radius: 10px;
-      overflow: hidden;
-      margin-bottom: 40px;
-    }
-
-    .alarm-section {
-      background-color: #1b2b28;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px #00ff9955;
-      margin-bottom: 50px;
-    }
-
-    h2 {
-      color: #00ff99;
-    }
-
-    input[type="number"] {
-      padding: 10px;
-      width: 100%;
+    input, button {
       font-size: 1em;
-      margin-top: 10px;
-      border: none;
-      border-radius: 6px;
-      margin-bottom: 10px;
-    }
-
-    button {
-      padding: 10px 20px;
-      background-color: #00c853;
-      color: #0f1a17;
-      font-weight: bold;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      margin-right: 10px;
-    }
-
-    .status {
-      margin-top: 10px;
-      font-size: 1em;
-      color: #66ffaa;
-    }
-
-    .footer {
-      text-align: center;
-      padding: 20px;
-      font-size: 0.9em;
-      background-color: #06130f;
-      color: #44ffaa88;
     }
   </style>
 </head>
 <body>
+  <header>
+    TeddAplicator2
+  </header>
 
-  <header>TeddAplicator2 - Alarm Entry Forex</header>
-
-  <div class="section">
-    <!-- Intro Section -->
-    <div class="intro">
-      <h2>Selamat datang di TeddAplicator2</h2>
-      <p>Platform pemantauan entry forex berbasis alarm harga dan analisa real-time. Pantau pergerakan XAUUSD langsung di chart, dan aktifkan alarm saat harga menyentuh titik penting pilihanmu.</p>
-      <a href="#" class="btn-demo">Coba Demo Sekarang</a>
-    </div>
-
-    <!-- Chart Header with Alarm Button -->
-    <div class="chart-header">
-      <h2>Chart Live XAUUSD</h2>
-      <a href="#alarmSection" class="btn-alarm">Set Alarm</a>
-    </div>
-
-    <!-- Chart Section -->
-    <div class="chart-section">
-      <div class="tradingview-widget-container" style="height:100%; width:100%">
-        <div id="tradingview_advanced" style="height:100%; width:100%"></div>
-        <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
-        <script type="text/javascript">
-          new TradingView.widget({
-            "container_id": "tradingview_advanced",
-            "autosize": true,
-            "symbol": "OANDA:XAUUSD",
-            "interval": "15",
-            "timezone": "Asia/Jakarta",
-            "theme": "dark",
-            "style": "1",
-            "locale": "id",
-            "toolbar_bg": "#0f1a17",
-            "enable_publishing": false,
-            "withdateranges": true,
-            "hide_side_toolbar": false,
-            "allow_symbol_change": true,
-            "save_image": false,
-            "studies": [],
-            "details": true
-          });
-        </script>
-      </div>
-    </div>
-
-    <!-- Alarm Section -->
-    <div id="alarmSection" class="alarm-section">
-      <h2>Set Alarm Harga Manual (XAUUSD)</h2>
-      <label for="targetPrice">Masukkan harga target:</label>
-      <input type="number" id="targetPrice" step="0.01" placeholder="Contoh: 2375.50">
-      <button onclick="setAlarm()">Set Alarm</button>
-      <button onclick="resetAlarm()">Reset</button>
-      <div class="status" id="statusText">Belum ada alarm yang diatur.</div>
-    </div>
+  <div class="section intro">
+    <p>Website ini dirancang untuk mendeteksi waktu entry terbaik di pasar forex secara otomatis dan memberikan alarm saat waktunya masuk posisi.</p>
   </div>
 
-  <!-- Alarm Sound -->
-  <audio id="alarmSound" src="https://notificationsounds.com/storage/sounds/file-sounds-1155-pristine.mp3" preload="auto"></audio>
+  <!-- 🔔 FITUR ALARM ENTRY -->
+  <div class="section" style="text-align: center; margin-top: 50px;">
+    <h2>Set Alarm Entry</h2>
+    <input type="time" id="alarmTime" style="padding: 10px; font-size: 1em; border-radius: 5px;" />
+    <button id="setAlarm" style="padding: 10px 20px; font-size: 1em; margin-left: 10px; border-radius: 5px; background-color: #00c853; color: #0f1a17; border: none;">Set Alarm</button>
+  </div>
 
-  <!-- Script Alarm -->
   <script>
-    let alarmPrice = null;
-    let alarmTriggered = false;
+    let alarmTime = null;
+    let alarmTimeout = null;
+    let audio = new Audio("https://www.soundjay.com/button/beep-07.wav");
 
-    function setAlarm() {
-      const input = document.getElementById("targetPrice");
-      alarmPrice = parseFloat(input.value);
-      alarmTriggered = false;
-      document.getElementById("statusText").innerText = `Alarm disetel di ${alarmPrice.toFixed(2)} - menunggu harga menyentuh...`;
-    }
+    document.addEventListener("DOMContentLoaded", function () {
+      const setBtn = document.getElementById("setAlarm");
+      const timeInput = document.getElementById("alarmTime");
 
-    function resetAlarm() {
-      <button onclick="document.getElementById('alarmSound').play()">🔊 Tes Bunyi Alarm</button>
-      alarmPrice = null;
-      alarmTriggered = false;
-      document.getElementById("statusText").innerText = "Alarm telah di-reset.";
-    }
+      setBtn.addEventListener("click", () => {
+        if (!timeInput.value) {
+          alert("Silakan pilih jam alarm terlebih dahulu.");
+          return;
+        }
 
-    async function getCurrentPrice() {
-      try {
-        const response = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=tether-gold&vs_currencies=usd");
-        const data = await response.json();
-        return data["tether-gold"].usd;
-      } catch (error) {
-        console.error("Gagal ambil harga:", error);
-        return null;
-      }
-    }
+        const now = new Date();
+        const alarm = new Date();
+        const [hour, minute] = timeInput.value.split(":");
+        alarm.setHours(hour);
+        alarm.setMinutes(minute);
+        alarm.setSeconds(0);
 
-    async function monitorPrice() {
-      if (!alarmPrice || alarmTriggered) return;
-      const currentPrice = await getCurrentPrice();
-      if (currentPrice && currentPrice >= alarmPrice) {
-        document.getElementById("statusText").innerText = `🎯 Harga sekarang ${currentPrice} sudah mencapai target ${alarmPrice}!`;
-        document.getElementById("alarmSound").play();
-        alarmTriggered = true;
-      } else if (currentPrice) {
-        document.getElementById("statusText").innerText = `⏳ Harga sekarang: ${currentPrice} | Menunggu: ${alarmPrice}`;
-      }
-    }
+        const timeDiff = alarm.getTime() - now.getTime();
 
-    setInterval(monitorPrice, 6000);
+        if (timeDiff < 0) {
+          alert("Waktu alarm harus di masa depan.");
+          return;
+        }
+
+        clearTimeout(alarmTimeout);
+        alarmTimeout = setTimeout(() => {
+          audio.play();
+          alert("⏰ Waktu entry sekarang!");
+        }, timeDiff);
+
+        alert("Alarm disetel untuk pukul " + timeInput.value);
+      });
+    });
   </script>
-
-  <div class="footer">
-    © 2025 TeddAplicator2 · Dibuat oleh Mas Teddy & Treasure
-  </div>
-
 </body>
 </html>
