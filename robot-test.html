@@ -58,6 +58,9 @@
   <script>
     const apiKey = "71b4e9263e6443f18d394bdfaf453c21";
     const symbol = "XAU/USD";
+    const corsProxy = "https://corsproxy.io/?";
+    const fetchURL = `${corsProxy}https://api.twelvedata.com/time_series?symbol=${symbol}&interval=1min&outputsize=20&apikey=${apiKey}`;
+
     let lastPrice = null;
     const logEl = document.getElementById("log");
 
@@ -67,8 +70,7 @@
     }
 
     function fetchData() {
-      const url = `https://api.twelvedata.com/time_series?symbol=${symbol}&interval=1min&outputsize=20&apikey=${apiKey}`;
-      fetch(url)
+      fetch(fetchURL)
         .then(res => res.json())
         .then(data => {
           if (!data.values) {
@@ -81,14 +83,12 @@
           const hargaTerbaru = harga[harga.length - 1];
           const priceEl = document.getElementById("price");
 
-          // Deteksi arah
           if (lastPrice !== null) {
             priceEl.className = hargaTerbaru > lastPrice ? "up" : hargaTerbaru < lastPrice ? "down" : "";
           }
           priceEl.textContent = `💰 ${hargaTerbaru.toFixed(2)}`;
           lastPrice = hargaTerbaru;
 
-          // Hitung RSI
           const rsi = window.RSI.calculate({ period: 14, values: harga });
           const rsiTerakhir = rsi[rsi.length - 1];
 
@@ -100,15 +100,13 @@
           log(`📊 Harga: ${hargaTerbaru} | RSI: ${rsiTerakhir.toFixed(2)} → ${sinyal}`);
         })
         .catch(err => {
-          log("⚠️ Error jaringan: " + err);
+          log("⚠️ Error jaringan: " + err.message);
         });
     }
 
-    // Update tiap 1 detik
     fetchData();
     setInterval(fetchData, 1000);
 
-    // Chart TradingView
     new TradingView.widget({
       "width": "100%",
       "height": 400,
