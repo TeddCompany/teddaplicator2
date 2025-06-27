@@ -32,10 +32,25 @@
     }
     .up { color: #00e676; }
     .down { color: #ff5252; }
-    #chart {
-      height: 400px;
-      max-width: 100%;
+    #chart-container {
+      position: relative;
       margin: 20px auto;
+      max-width: 100%;
+    }
+    #chart {
+      width: 100%;
+    }
+    #fullscreenBtn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: #00c853;
+      color: #0f1a17;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 0.9em;
     }
     #log {
       background: #1a2e28;
@@ -52,14 +67,20 @@
   <h1>🤖 Robot Monitor XAUUSD</h1>
   <div id="price">Loading...</div>
   <div id="status">Status: Mengambil data...</div>
-  <div id="chart"></div>
+
+  <!-- Chart + Fullscreen -->
+  <div id="chart-container">
+    <div id="chart"></div>
+    <button id="fullscreenBtn">🖥 Fullscreen</button>
+  </div>
+
   <div id="log">[Log robot akan muncul di sini]</div>
 
   <script>
     const apiKey = "71b4e9263e6443f18d394bdfaf453c21";
     const rawSymbol = "XAU/USD";
     const symbol = encodeURIComponent(rawSymbol);
-    const corsProxy = "https://corsproxy.io/?";
+    const corsProxy = "https://api.allorigins.win/raw?url=";
     const fetchURL = `${corsProxy}https://api.twelvedata.com/time_series?symbol=${symbol}&interval=1min&outputsize=20&apikey=${apiKey}`;
 
     let lastPrice = null;
@@ -108,9 +129,11 @@
     fetchData();
     setInterval(fetchData, 1000);
 
+    // Dynamic chart height
+    const chartHeight = window.innerWidth < 600 ? 320 : 500;
     new TradingView.widget({
       "width": "100%",
-      "height": 400,
+      "height": chartHeight,
       "symbol": "OANDA:XAUUSD",
       "interval": "1",
       "timezone": "Asia/Jakarta",
@@ -121,6 +144,16 @@
       "enable_publishing": false,
       "allow_symbol_change": false,
       "container_id": "chart"
+    });
+
+    // Fullscreen logic
+    document.getElementById("fullscreenBtn").addEventListener("click", () => {
+      const el = document.getElementById("chart-container");
+      if (document.fullscreenElement) {
+        document.exitFullscreen();
+      } else {
+        el.requestFullscreen();
+      }
     });
   </script>
 </body>
