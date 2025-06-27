@@ -57,7 +57,8 @@
 
   <script>
     const apiKey = "71b4e9263e6443f18d394bdfaf453c21";
-    const symbol = "XAU/USD";
+    const rawSymbol = "XAU/USD";
+    const symbol = encodeURIComponent(rawSymbol);
     const corsProxy = "https://corsproxy.io/?";
     const fetchURL = `${corsProxy}https://api.twelvedata.com/time_series?symbol=${symbol}&interval=1min&outputsize=20&apikey=${apiKey}`;
 
