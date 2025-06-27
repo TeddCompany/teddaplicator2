@@ -12,6 +12,7 @@
     .controls { margin-bottom:20px; }
     select, input, button { padding:8px; margin-right:10px; border-radius:5px; font-size:1em; }
     #log { background:#162821; padding:10px; height:200px; overflow:auto; margin-top:20px; border-radius:5px; }
+    .section { margin-top:20px; }
   </style>
 </head>
 <body>
@@ -27,10 +28,31 @@
     <button onclick="startTest()">Mulai Test Robot</button>
     <button onclick="stopTest()">Stop</button>
   </div>
+
+  <!-- Chart Realtime -->
+  <div class="section">
+    <div id="chart-container" style="height:400px;"></div>
+  </div>
+
+  <!-- Log Output -->
   <div id="log"></div>
 
+  <script src="https://s3.tradingview.com/tv.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/technicalindicators/3.0.0/technicalindicators.min.js"></script>
   <script>
+    let tvWidget = null;
+    function loadChart(pair) {
+      if (tvWidget) tvWidget.remove();
+      tvWidget = new TradingView.widget({
+        "width": "100%", "height": 400,
+        "symbol": "OANDA:" + pair,
+        "interval": "1", "timezone": "Asia/Jakarta",
+        "theme": "dark", "style": "1", "locale": "id",
+        "toolbar_bg": "#f1f3f6", "enable_publishing": false,
+        "allow_symbol_change": false, "container_id": "chart-container"
+      });
+    }
+
     const logEl = document.getElementById('log');
     let testInterval = null;
 
@@ -42,10 +64,10 @@
     async function getPrices(pair) {
       try {
         const sym = pair === 'XAUUSD' ? 'XAU/USD' : 'BTC/USD';
-        const res = await fetch(`https://api.twelvedata.com/time_series?symbol=${sym}&interval=1min&apikey=YOUR_API_KEY&outputsize=30`);
+        const res = await fetch(`https://api.twelvedata.com/time_series?symbol=${sym}&interval=1min&apikey=71b4e9263e6443f18d394bdfaf453c21&outputsize=100`);
         const data = await res.json();
         return data.values.map(v => parseFloat(v.close)).reverse();
-      } catch {
+      } catch (e) {
         log('⚠️ Gagal ambil data ' + pair);
         return [];
       }
@@ -54,24 +76,26 @@
     async function startTest() {
       const period = parseInt(document.getElementById('rsiPeriod').value);
       const pair = document.getElementById('pair').value;
-
-      if (testInterval) stopTest();
-
-      log(`⚙️ Memulai tes pada ${pair} (RSI ${period})...`);
-      let prices = await getPrices(pair);
-      if (prices.length < period) {
-        log('❌ Data kurang untuk hitung RSI.');
-        return;
-      }
+      loadChart(pair);
+      if (testInterval) clearInterval(testInterval);
+      log(`⚙️ Mulai uji ${pair} (RSI ${period})...`);
 
       testInterval = setInterval(async () => {
-        prices = await getPrices(pair);
+        const prices = await getPrices(pair);
+        if (prices.length < period) {
+          log('❌ Data kurang untuk hitung RSI.');
+          return;
+        }
         const rsi = technicalindicators.RSI.calculate({ values: prices, period }).slice(-1)[0];
-        log(`Harga terakhir ${pair}: ${prices[prices.length-1]}, RSI: ${rsi.toFixed(2)}`);
-
-        if (rsi < 30) log('✅ SIGNAL BUY (RSI oversold)');
-        if (rsi > 70) log('⚠️ SIGNAL SELL (RSI overbought)');
+        const price = prices[prices.length -1];
+        log(`Harga: ${price}, RSI: ${rsi.toFixed(2)}`);
+        if (rsi < 30) log('✅ SIGNAL BUY');
+        if (rsi > 70) log('⚠️ SIGNAL SELL');
       }, 60000);
+
+      // jalankan satu kali segera
+      clearInterval(testInterval);
+      testInterval = setTimeout(startTest, 0);
     }
 
     function stopTest() {
@@ -79,6 +103,14 @@
       testInterval = null;
       log('⏹️ Test dihentikan');
     }
+
+    // reload chart saat pair berubah
+    document.getElementById('pair').addEventListener('change', () => {
+      loadChart(document.getElementById('pair').value);
+    });
+
+    // inisialisasi chart XAUUSD
+    loadChart('XAUUSD');
   </script>
 </body>
 </html>
