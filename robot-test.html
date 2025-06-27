@@ -80,7 +80,7 @@
     }
 
     function startTest() {
-      const pair = document.getElementById("pair").value.replace("/", "");
+      const pair = document.getElementById("pair").value;
       const period = parseInt(document.getElementById("rsiPeriod").value);
       if (!period || period <= 1) {
         alert("RSI period harus lebih dari 1.");
@@ -93,6 +93,7 @@
       loadChart(pair);
       clearInterval(interval);
       interval = setInterval(() => fetchAndAnalyze(pair, period), 10000);
+      fetchAndAnalyze(pair, period); // langsung 1x pertama
     }
 
     function stopTest() {
@@ -122,7 +123,9 @@
 
           const rsi = window.RSI.calculate({ values: closePrices, period: rsiPeriod });
           const lastRSI = rsi[rsi.length - 1];
-          log(`✅ RSI terbaru: ${lastRSI.toFixed(2)}`);
+          const lastPrice = closePrices[closePrices.length - 1];
+
+          log(`Harga: ${lastPrice.toFixed(2)}, RSI: ${lastRSI.toFixed(2)}`);
 
           if (lastRSI < 30) {
             updateStatus("Sinyal BUY terdeteksi!", "🟢");
@@ -150,7 +153,7 @@
     }
 
     function loadChart(pair) {
-      const symbol = pair === "XAUUSD" ? "OANDA:XAUUSD" : "BINANCE:BTCUSDT";
+      const symbol = pair === "XAU/USD" ? "OANDA:XAUUSD" : "BINANCE:BTCUSDT";
       document.getElementById("chart-container").innerHTML = "";
       new TradingView.widget({
         "container_id": "chart-container",
