@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TeddAplicator2 Robot Test</title>
+  <title>XAUUSD Monitor Live</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron&family=Poppins&display=swap" rel="stylesheet">
   <script src="https://s3.tradingview.com/tv.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/technicalindicators/3.0.0/technicalindicators.min.js"></script>
@@ -12,163 +12,108 @@
       background-color: #0f1a17;
       color: #e0ffe6;
       font-family: 'Poppins', sans-serif;
-      padding: 20px;
+      padding: 10px;
+      margin: 0;
     }
     h1 {
       font-family: 'Orbitron', sans-serif;
       text-align: center;
+      font-size: 1.8em;
     }
-    .controls {
+    #price {
+      font-size: 2em;
       text-align: center;
-      margin-bottom: 20px;
-    }
-    select, input, button {
-      padding: 10px;
-      margin: 5px;
-      font-size: 1em;
-    }
-    #chart-container {
-      height: 400px;
-      margin-bottom: 20px;
-    }
-    #log {
-      background: #162821;
-      padding: 15px;
-      border-radius: 8px;
-      white-space: pre-wrap;
-      font-family: monospace;
-      max-height: 300px;
-      overflow-y: auto;
+      margin: 15px 0;
+      transition: color 0.2s ease;
     }
     #status {
       text-align: center;
       font-size: 1.1em;
-      margin-bottom: 10px;
+      margin-bottom: 20px;
+    }
+    .up {
+      color: #00e676;
+    }
+    .down {
+      color: #ff5252;
+    }
+    #chart-container {
+      height: 400px;
+      max-width: 100%;
+    }
+    @media (max-width: 600px) {
+      #chart-container {
+        height: 300px;
+      }
     }
   </style>
 </head>
 <body>
-  <h1>TeddAplicator2 Robot Test</h1>
-  <div class="controls">
-    <label>Pair:</label>
-    <select id="pair">
-      <option value="XAU/USD">XAUUSD</option>
-      <option value="BTC/USD">BTCUSD</option>
-    </select>
-    <label>RSI Period:</label>
-    <input type="number" id="rsiPeriod" value="14" />
-    <button onclick="startTest()">Mulai Test Robot</button>
-    <button onclick="stopTest()">Stop</button>
-  </div>
+  <h1>📊 XAUUSD Monitor Live</h1>
+  <div id="price">Loading...</div>
+  <div id="status">Mengambil data harga...</div>
 
-  <div id="chart-container"></div>
-  <div id="status">🟡 Menunggu perintah...</div>
-  <div id="log"></div>
+  <div class="tradingview-widget-container" id="chart-container"></div>
 
   <script>
-    let interval = null;
-    const logEl = document.getElementById('log');
-    const statusEl = document.getElementById('status');
+    const apiKey = "71b4e9263e6443f18d394bdfaf453c21";
+    let lastPrice = null;
 
-    function log(msg) {
-      const now = new Date().toLocaleTimeString();
-      logEl.innerText = `[${now}] ${msg}\n` + logEl.innerText;
-    }
-
-    function updateStatus(text, emoji = "🔄") {
-      statusEl.innerHTML = `${emoji} ${text}`;
-    }
-
-    function startTest() {
-      const pair = document.getElementById("pair").value;
-      const period = parseInt(document.getElementById("rsiPeriod").value);
-      if (!period || period <= 1) {
-        alert("RSI period harus lebih dari 1.");
-        return;
-      }
-
-      updateStatus(`Memulai test robot untuk ${pair} (RSI ${period})...`);
-      log(`Memulai uji RSI untuk ${pair}`);
-
-      loadChart(pair);
-      clearInterval(interval);
-      interval = setInterval(() => fetchAndAnalyze(pair, period), 10000);
-      fetchAndAnalyze(pair, period); // langsung 1x pertama
-    }
-
-    function stopTest() {
-      clearInterval(interval);
-      updateStatus("Robot dihentikan", "⏹️");
-      log("Robot dihentikan.");
-    }
-
-    function fetchAndAnalyze(pair, rsiPeriod) {
-      updateStatus("Mengambil data harga...");
-      const apiKey = "71b4e9263e6443f18d394bdfaf453c21";
-      const url = `https://api.twelvedata.com/time_series?symbol=${pair}&interval=1min&outputsize=100&apikey=${apiKey}`;
-
+    function updatePrice() {
+      const url = `https://api.twelvedata.com/time_series?symbol=XAU/USD&interval=1min&outputsize=20&apikey=${apiKey}`;
       fetch(url)
         .then(res => res.json())
         .then(data => {
           if (!data.values || data.status === "error") {
-            log(`⚠️ Gagal ambil data: ${data.message || "Unknown error"}`);
+            document.getElementById("status").innerText = "❌ Gagal ambil data: " + (data.message || "Unknown error");
             return;
           }
 
-          const closePrices = data.values.map(d => parseFloat(d.close)).reverse();
-          if (closePrices.length < rsiPeriod) {
-            log("❌ Data kurang untuk hitung RSI.");
-            return;
-          }
+          const prices = data.values.map(x => parseFloat(x.close)).reverse();
+          const latestPrice = prices[prices.length - 1];
+          const priceEl = document.getElementById("price");
 
-          const rsi = window.RSI.calculate({ values: closePrices, period: rsiPeriod });
+          // Ubah warna berdasarkan naik/turun
+          if (lastPrice !== null) {
+            priceEl.className = latestPrice > lastPrice ? "up" : latestPrice < lastPrice ? "down" : "";
+          }
+          lastPrice = latestPrice;
+          priceEl.innerText = `💰 ${latestPrice.toFixed(2)}`;
+
+          // Hitung RSI
+          const rsi = window.RSI.calculate({ period: 14, values: prices });
           const lastRSI = rsi[rsi.length - 1];
-          const lastPrice = closePrices[closePrices.length - 1];
+          let sinyal = "⚪ WAIT";
+          if (lastRSI < 30) sinyal = "🟢 BUY";
+          else if (lastRSI > 70) sinyal = "🔴 SELL";
 
-          log(`Harga: ${lastPrice.toFixed(2)}, RSI: ${lastRSI.toFixed(2)}`);
-
-          if (lastRSI < 30) {
-            updateStatus("Sinyal BUY terdeteksi!", "🟢");
-            log("🟢 RSI di bawah 30 (oversold) → Potensi BUY");
-            showEntryButton("BUY");
-          } else if (lastRSI > 70) {
-            updateStatus("Sinyal SELL terdeteksi!", "🔴");
-            log("🔴 RSI di atas 70 (overbought) → Potensi SELL");
-            showEntryButton("SELL");
-          } else {
-            updateStatus("RSI normal. Tidak ada sinyal entry.", "⚪");
-          }
+          document.getElementById("status").innerText = `RSI: ${lastRSI.toFixed(2)} ${sinyal}`;
+        })
+        .catch(err => {
+          document.getElementById("status").innerText = "⚠️ Error koneksi API";
         });
     }
 
-    function showEntryButton(type) {
-      const btn = document.createElement("button");
-      btn.innerText = `🔔 Execute Entry ${type}`;
-      btn.style.marginTop = "10px";
-      btn.onclick = () => {
-        log(`✅ Entry ${type} disimulasikan.`);
-        btn.remove();
-      };
-      document.getElementById("status").appendChild(btn);
-    }
+    // Realtime update tiap detik
+    updatePrice();
+    setInterval(updatePrice, 1000);
 
-    function loadChart(pair) {
-      const symbol = pair === "XAU/USD" ? "OANDA:XAUUSD" : "BINANCE:BTCUSDT";
-      document.getElementById("chart-container").innerHTML = "";
-      new TradingView.widget({
-        "container_id": "chart-container",
-        "symbol": symbol,
-        "interval": "1",
-        "timezone": "Asia/Jakarta",
-        "theme": "dark",
-        "style": "1",
-        "locale": "id",
-        "toolbar_bg": "#f1f3f6",
-        "enable_publishing": false,
-        "allow_symbol_change": false,
-        "autosize": true
-      });
-    }
+    // TradingView chart
+    new TradingView.widget({
+      "width": "100%",
+      "height": "100%",
+      "symbol": "OANDA:XAUUSD",
+      "interval": "1",
+      "timezone": "Asia/Jakarta",
+      "theme": "dark",
+      "style": "1",
+      "locale": "id",
+      "toolbar_bg": "#f1f3f6",
+      "enable_publishing": false,
+      "allow_symbol_change": false,
+      "autosize": true,
+      "container_id": "chart-container"
+    });
   </script>
 </body>
 </html>
