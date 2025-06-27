@@ -1,17 +1,12 @@
-<!-- LANGSUNG DARI AWAL 
-bismillah dulu baru entry🤲🏻-->
-<!-- LANGSUNG DARI AWAL -->
 <!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>TeddAplicator2 - Alarm Entry Forex</title>
+  <title>TeddAplicator2 - Alarm dan monitor Entry Forex</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <style>
-    html {
-      scroll-behavior: smooth;
-    }
+    html { scroll-behavior: smooth; }
     body {
       font-family: 'Poppins', sans-serif;
       background-color: #0f1a17;
@@ -32,31 +27,45 @@ bismillah dulu baru entry🤲🏻-->
       margin: 20px auto;
       padding: 20px;
     }
-    .intro {
-      background-color: #162821;
-      padding: 20px;
-      border-radius: 10px;
-      margin-bottom: 20px;
-    }
     input, button {
       font-size: 1em;
     }
   </style>
 </head>
 <body>
-  <header>
-    TeddAplicator2
-  </header>
+  <header>TeddAplicator2</header>
 
-  <div class="section intro">
-    <p>Website ini dirancang untuk mendeteksi waktu entry terbaik di pasar forex secara otomatis dan memberikan alarm saat waktunya masuk posisi.</p>
+  <div class="section">
+    <p>Website ini memantau waktu entry terbaik di pasar forex secara otomatis. Gunakan alarm untuk mengatur waktu entry dan pantau chart multi-pair realtime di bawah ini.</p>
   </div>
 
-  <!-- 🔔 FITUR ALARM ENTRY -->
+  <!-- ✅ TradingView Chart Widget (Multi Pair & Responsive) -->
+  <div class="tradingview-widget-container section">
+    <div id="tradingview_chart" style="height:500px;"></div>
+  </div>
+  <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+  <script type="text/javascript">
+    new TradingView.widget({
+      "width": "100%",
+      "height": 500,
+      "symbol": "OANDA:XAUUSD",
+      "interval": "15",
+      "timezone": "Asia/Jakarta",
+      "theme": "dark",
+      "style": "1",
+      "locale": "id",
+      "toolbar_bg": "#f1f3f6",
+      "enable_publishing": false,
+      "allow_symbol_change": true,
+      "container_id": "tradingview_chart"
+    });
+  </script>
+
+  <!-- 🔔 Alarm Entry -->
   <div class="section" style="text-align: center; margin-top: 50px;">
     <h2>Set Alarm Entry</h2>
-    <input type="time" id="alarmTime" style="padding: 10px; font-size: 1em; border-radius: 5px;" />
-    <button id="setAlarm" style="padding: 10px 20px; font-size: 1em; margin-left: 10px; border-radius: 5px; background-color: #00c853; color: #0f1a17; border: none;">Set Alarm</button>
+    <input type="time" id="alarmTime" style="padding: 10px; border-radius: 5px;" />
+    <button id="setAlarm" style="padding: 10px 20px; margin-left: 10px; border-radius: 5px; background-color: #00c853; color: #0f1a17; border: none;">Set Alarm</button>
   </div>
 
   <script>
