@@ -61,51 +61,60 @@
     });
   </script>
 
-  <!-- 🔔 Alarm Entry -->
-  <div class="section" style="text-align: center; margin-top: 50px;">
-    <h2>Set Alarm Entry</h2>
-    <input type="time" id="alarmTime" style="padding: 10px; border-radius: 5px;" />
-    <button id="setAlarm" style="padding: 10px 20px; margin-left: 10px; border-radius: 5px; background-color: #00c853; color: #0f1a17; border: none;">Set Alarm</button>
-  </div>
+  <!-- 🔔 Alarm Harga -->
+<div class="section" style="text-align: center; margin-top: 50px;">
+  <h2>Alarm Harga</h2>
+  <label for="pair">Pilih Pair:</label>
+  <select id="pair">
+    <option value="XAUUSD">XAUUSD</option>
+    <option value="BTCUSD">BTCUSD</option>
+  </select><br />
+  <label for="targetPrice">Target Harga:</label>
+  <input type="number" id="targetPrice" step="0.01" placeholder="Masukkan harga target" /><br />
+  <button onclick="setPriceAlarm()">Setel Alarm Harga</button>
+  <p id="currentPrice">Harga saat ini: -</p>
+</div>
 
-  <script>
-    let alarmTime = null;
-    let alarmTimeout = null;
-    let audio = new Audio("https://www.soundjay.com/button/beep-07.wav");
+<script>
+  let audio = new Audio("https://www.soundjay.com/button/beep-07.wav");
+  let priceAlarmActive = false;
+  let targetPrice = null;
+  let selectedPair = "XAUUSD";
 
-    document.addEventListener("DOMContentLoaded", function () {
-      const setBtn = document.getElementById("setAlarm");
-      const timeInput = document.getElementById("alarmTime");
+  function setPriceAlarm() {
+    targetPrice = parseFloat(document.getElementById("targetPrice").value);
+    selectedPair = document.getElementById("pair").value;
 
-      setBtn.addEventListener("click", () => {
-        if (!timeInput.value) {
-          alert("Silakan pilih jam alarm terlebih dahulu.");
-          return;
-        }
+    if (isNaN(targetPrice)) {
+      alert("Masukkan harga target yang valid!");
+      return;
+    }
 
-        const now = new Date();
-        const alarm = new Date();
-        const [hour, minute] = timeInput.value.split(":");
-        alarm.setHours(hour);
-        alarm.setMinutes(minute);
-        alarm.setSeconds(0);
+    priceAlarmActive = true;
+    alert("Alarm harga disetel untuk " + selectedPair + " pada harga " + targetPrice);
+  }
 
-        const timeDiff = alarm.getTime() - now.getTime();
-
-        if (timeDiff < 0) {
-          alert("Waktu alarm harus di masa depan.");
-          return;
-        }
-
-        clearTimeout(alarmTimeout);
-        alarmTimeout = setTimeout(() => {
+  async function fetchPrice(pair) {
+    const symbol = pair === "XAUUSD" ? "XAU/USD" : "BTC/USD";
+    try {
+      const res = await fetch(`https://api.twelvedata.com/price?symbol=${symbol}&apikey=demo`);
+      const data = await res.json();
+      if (data && data.price) {
+        const current = parseFloat(data.price);
+        document.getElementById("currentPrice").textContent = "Harga saat ini (" + pair + "): " + current;
+        if (priceAlarmActive && current >= targetPrice) {
+          priceAlarmActive = false;
           audio.play();
-          alert("⏰ Waktu entry sekarang!");
-        }, timeDiff);
+          alert("⏰ Harga " + pair + " telah menyentuh target!");
+        }
+      }
+    } catch (e) {
+      console.error("Gagal mengambil harga", e);
+    }
+  }
 
-        alert("Alarm disetel untuk pukul " + timeInput.value);
-      });
-    });
-  </script>
-</body>
-</html>
+  setInterval(() => {
+    const pair = document.getElementById("pair").value;
+    fetchPrice(pair);
+  }, 5000); // Cek setiap 5 detik
+</script>
