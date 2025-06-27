@@ -1,1 +1,84 @@
 
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TeddAplicator2 – Robot Test</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    body { font-family:Poppins,sans-serif; background:#0f1a17; color:#e0ffe6; margin:0; padding:20px; }
+    h1 { font-family:Orbitron,sans-serif; }
+    .controls { margin-bottom:20px; }
+    select, input, button { padding:8px; margin-right:10px; border-radius:5px; font-size:1em; }
+    #log { background:#162821; padding:10px; height:200px; overflow:auto; margin-top:20px; border-radius:5px; }
+  </style>
+</head>
+<body>
+  <h1>TeddAplicator2 Robot Test</h1>
+  <div class="controls">
+    <label>Pair:</label>
+    <select id="pair">
+      <option value="XAUUSD">XAUUSD</option>
+      <option value="BTCUSD">BTCUSD</option>
+    </select>
+    <label>RSI Period:</label>
+    <input type="number" id="rsiPeriod" value="14" style="width:60px" />
+    <button onclick="startTest()">Mulai Test Robot</button>
+    <button onclick="stopTest()">Stop</button>
+  </div>
+  <div id="log"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/technicalindicators/3.0.0/technicalindicators.min.js"></script>
+  <script>
+    const logEl = document.getElementById('log');
+    let testInterval = null;
+
+    function log(msg) {
+      const now = new Date().toLocaleTimeString();
+      logEl.innerHTML = `[${now}] ${msg}<br>` + logEl.innerHTML;
+    }
+
+    async function getPrices(pair) {
+      try {
+        const sym = pair === 'XAUUSD' ? 'XAU/USD' : 'BTC/USD';
+        const res = await fetch(`https://api.twelvedata.com/time_series?symbol=${sym}&interval=1min&apikey=YOUR_API_KEY&outputsize=30`);
+        const data = await res.json();
+        return data.values.map(v => parseFloat(v.close)).reverse();
+      } catch {
+        log('⚠️ Gagal ambil data ' + pair);
+        return [];
+      }
+    }
+
+    async function startTest() {
+      const period = parseInt(document.getElementById('rsiPeriod').value);
+      const pair = document.getElementById('pair').value;
+
+      if (testInterval) stopTest();
+
+      log(`⚙️ Memulai tes pada ${pair} (RSI ${period})...`);
+      let prices = await getPrices(pair);
+      if (prices.length < period) {
+        log('❌ Data kurang untuk hitung RSI.');
+        return;
+      }
+
+      testInterval = setInterval(async () => {
+        prices = await getPrices(pair);
+        const rsi = technicalindicators.RSI.calculate({ values: prices, period }).slice(-1)[0];
+        log(`Harga terakhir ${pair}: ${prices[prices.length-1]}, RSI: ${rsi.toFixed(2)}`);
+
+        if (rsi < 30) log('✅ SIGNAL BUY (RSI oversold)');
+        if (rsi > 70) log('⚠️ SIGNAL SELL (RSI overbought)');
+      }, 60000);
+    }
+
+    function stopTest() {
+      clearInterval(testInterval);
+      testInterval = null;
+      log('⏹️ Test dihentikan');
+    }
+  </script>
+</body>
+</html>
